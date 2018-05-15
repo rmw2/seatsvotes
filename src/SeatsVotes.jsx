@@ -48,7 +48,7 @@ export default class SeatsVotes extends Component {
             <input value={width} onChange={(e) => this.setState({width: e.target.value})} />
           </label>
         </div>
-
+        <div style={{margin: '1em'}}>50% Vote Share = {(100*(stats[499].mean/2 + stats[500].mean/2)).toFixed(2)}% Seat Share</div>
         <VictoryChart height={300}
           domain={{x: [0.1, 0.9], y: [0.1, 0.9]}}>
           <VictoryScatter data={means} size={1} style={{ data: { fill: '#e00', opacity: 0.3 } }}/>

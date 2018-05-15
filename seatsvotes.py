@@ -10,7 +10,7 @@ def preprocess(data, exclude=[], impute=0.75):
 
     return clean_results
 
-def seats_votes_curve(all_results, n_sims=10000, n_districts=20):
+def seats_votes_curve(all_results, n_sims=100000, n_districts=10):
     """ Build it """
 
     # More efficient to convert everything to numpy
@@ -40,11 +40,12 @@ def bin_stats(seatshare, voteshare):
 
 if __name__ == '__main__':
     import json
+    from collections import defaultdict
     with open('precomputed_tests.json') as file:
         allresults = json.load(file)
 
     seats_votes = {}
-    stats = {}
+    stats = defaultdict(dict)
 
     skip = {
         '2012': ['PA', 'NC', 'OH', 'MI', 'IN'],
@@ -53,13 +54,14 @@ if __name__ == '__main__':
     }
 
     for y in skip:
-        res = allresults[y]
-        seatshare, voteshare = seats_votes_curve(preprocess(res, exclude=skip[y]))
-        seats_votes[y] = [{'x': x, 'y': y} for x,y in zip(voteshare, seatshare)]
-        stats[y] = bin_stats(seatshare, voteshare)
+        for ndists in range(6, 21):
+            res = allresults[y]
+            seatshare, voteshare = seats_votes_curve(preprocess(res, exclude=skip[y]), n_districts=ndists)
+            # seats_votes[y] = [{'x': x, 'y': y} for x,y in zip(voteshare, seatshare)]
+            stats[str(ndists)][y] = bin_stats(seatshare, voteshare)
 
-    with open('seatsvotes.json', 'w') as file:
-        json.dump(seats_votes, file)
+    # with open('seatsvotes.json', 'w') as file:
+    #     json.dump(seats_votes, file)
 
     with open('sv_stats.json', 'w') as file:
         json.dump(stats, file)

@@ -13,12 +13,13 @@ export default class SeatsVotes extends Component {
       mmd: 0.03,
       width: 0.15,
       year: '2016',
+      ndists: 10
     }
   }
 
   render() {
-    const {df, mmd, width, year} = this.state;
-    const stats = SEATSVOTES[year];
+    const {df, mmd, width, year, ndists} = this.state;
+    const stats = SEATSVOTES[ndists][year];
 
     const means = stats.map(({mean, std}, i) => ({x: i/1000, y: mean}))
     const his = stats.map(({mean, std}, i) => ({x: i/1000, y: mean + std}))
@@ -33,9 +34,14 @@ export default class SeatsVotes extends Component {
     return (
       <div id="seats-votes" style={{textAlign: 'center', width: '75%', margin: 'auto'}}>
         <div id="controls">
-          <div>
+          <div>year:
             {['2012', '2014', '2016'].map((y) => 
               <button disabled={year == y} onClick={() => this.setState({year: y})}>{y}</button>
+            )}
+          </div>
+          <div>ndists:
+            {['6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'].map((n) => 
+              <button disabled={ndists == n} onClick={() => this.setState({ndists: n})}>{n}</button>
             )}
           </div>
           <label>df:
